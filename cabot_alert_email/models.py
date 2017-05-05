@@ -43,17 +43,18 @@ class EmailAlert(AlertPlugin):
             if service.overall_status == service.CRITICAL_STATUS:
                 emails += [u.email for u in users if u.email]
             # subject = '%s status for service: %s *** | %s ***' % (
-            subject = '[%s] %s *** | %s *** ' % (
+            subject = 'Pateco Alerts: [%s] %s *** | %s *** ' % (
                 service.name, service.overall_status, alltype)
         else:
             for check in service.all_passing_checks():
                 alltype += str(check.name)
                 alltype += " | "
-            subject = '[%s] OK *** | %s ***' % (service.name, alltype)
+            subject = 'Pateco Alerts: [%s] OK *** | %s ***' % (service.name, alltype)
         t = Template(email_template)
         send_mail(
             subject=subject,
             message=t.render(c),
-            from_email='Cabot <%s>' % env.get('CABOT_FROM_EMAIL'),
+            #from_email='Cabot <%s>' % env.get('CABOT_FROM_EMAIL'),
+            from_email='Cabot PATECO',
             recipient_list=emails,
         )
