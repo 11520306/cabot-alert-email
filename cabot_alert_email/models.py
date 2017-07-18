@@ -70,7 +70,7 @@ class EmailAlert(AlertPlugin):
         if service.name == "HAProxy":
             t = Template(email_template_haproxy)
         else:        
-            t = Template(email_template)
+            t = Template(email_template_testfunc)
         send_mail(
             subject=subject,
             message=t.render(c),
