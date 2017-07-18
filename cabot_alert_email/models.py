@@ -32,11 +32,7 @@ Passing checks:{% for check in service.all_passing_checks %}
 {% endif %}
 """
 
-def testmail():
-    abc="HelloWorld"
-    return abc
-
-email_template_testfunc = """HAService {% 'abc' ps=testmail() %}"""
+email_template_testfunc = """HAService {{ resp }}"""
 
 class EmailAlert(AlertPlugin):
     name = "Email"
@@ -47,10 +43,13 @@ class EmailAlert(AlertPlugin):
         emails = [u.email for u in users if u.email]
         if not emails:
             return
+
+        resp = "Hello World NA"
         c = Context({
             'service': service,
             'host': settings.WWW_HTTP_HOST,
-            'scheme': settings.WWW_SCHEME
+            'scheme': settings.WWW_SCHEME,
+            'resp': resp
         })
         if service.overall_status != service.PASSING_STATUS:
             for check in service.all_failing_checks():
