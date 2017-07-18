@@ -21,6 +21,16 @@ Passing checks:{% for check in service.all_passing_checks %}
 {% endif %}
 """
 
+email_template_haproxy = """HAService {{ service.name }} {{ scheme }}://{{ host }}{% url 'service' pk=service.id %} {% if service.overall_status != service.PASSING_STATUS %}alerting with status: {{ service.overall_status }}{% else %}is back to normal{% endif %}.
+{% if service.overall_status != service.PASSING_STATUS %}
+CHECKS FAILING:{% for check in service.all_failing_checks %}
+  FAILING - {{ check.name }} - Metric: {{ check.metric }} - Value:  {{ check.last_result.error|safe }} {% endfor %}
+{% if service.all_passing_checks %}
+Passing checks:{% for check in service.all_passing_checks %}
+  PASSING - {{ check.name }} - Metric: {{ check.metric }} - Value: {{ check.last_result.error|safe }} - OK {% endfor %}
+{% endif %}
+{% endif %}
+"""
 
 class EmailAlert(AlertPlugin):
     name = "Email"
@@ -50,7 +60,11 @@ class EmailAlert(AlertPlugin):
                 alltype += str(check.name)
                 alltype += " | "
             subject = '[Pateco Alerts] [%s] OK *** | %s ***' % (service.name, alltype)
-        t = Template(email_template)
+
+        if service.name == "HAProxy":
+            t = Template(email_template_haproxy)
+        else:        
+            t = Template(email_template)
         send_mail(
             subject=subject,
             message=t.render(c),
