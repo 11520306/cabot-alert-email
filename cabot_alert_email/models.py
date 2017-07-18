@@ -36,7 +36,7 @@ def testmail():
     abc="HelloWorld"
     return abc
 
-email_template_testfunc = """HAService {{ testmail() }}"""
+email_template_testfunc = """HAService {% 'abc' ps=testmail() %}"""
 
 class EmailAlert(AlertPlugin):
     name = "Email"
