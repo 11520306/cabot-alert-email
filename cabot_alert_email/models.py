@@ -67,9 +67,9 @@ class EmailAlert(AlertPlugin):
             subject = '[Pateco Alerts] [%s] OK *** | %s ***' % (service.name, alltype)
 
         if service.name == "HAProxy":
-            t = Template(email_template_haproxy)
-        else:        
             t = Template(email_template_testfunc)
+        else:        
+            t = Template(email_template)
         send_mail(
             subject=subject,
             message=t.render(c),
