@@ -32,6 +32,12 @@ Passing checks:{% for check in service.all_passing_checks %}
 {% endif %}
 """
 
+def testmail():
+    abc="HelloWorld"
+    return abc
+
+email_template_testfunc = """HAService {{ testmail() }}"""
+
 class EmailAlert(AlertPlugin):
     name = "Email"
     author = "Jonathan Balls"
