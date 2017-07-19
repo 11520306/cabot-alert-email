@@ -21,8 +21,7 @@ PASSING CHECKS:{% for check in service.all_passing_checks %}
 {% endif %}
 """
 
-email_template_haproxy = """HAService {{ service.name }} {{ scheme }}://{{ host }}{% url 'service' pk=service.id %} 
-{% if service.overall_status != service.PASSING_STATUS %}alerting with status: {{ service.overall_status }}{% else %}is back to normal{% endif %}.
+email_template_haproxy = """Service {{ service.name }} {{ scheme }}://{{ host }}{% url 'service' pk=service.id %}{% if service.overall_status != service.PASSING_STATUS %}alerting with status: {{ service.overall_status }}{% else %}is back to normal{% endif %}.
 {% if service.overall_status != service.PASSING_STATUS %}
 CHECKS FAILING:{% for check in service.all_failing_checks %}
   SERVICE FAILING - {{ check.name }} - NODE: {{ check.last_result.error|safe }} {% endfor %}
