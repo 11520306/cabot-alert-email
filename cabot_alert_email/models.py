@@ -10,7 +10,7 @@ from cabot.cabotapp.alert import AlertPlugin
 import requests
 import logging
 
-email_template = """Service {{ service.name }} {{ scheme }}://{{ host }}{% url 'service' pk=service.id %} {% if service.overall_status != service.PASSING_STATUS %}alerting with status: {{ service.overall_status }}{% else %}is back to normal{% endif %}.
+email_template = """Service: {{ service.name }} ({{ scheme }}://{{ host }}{% url 'service' pk=service.id %}) {% if service.overall_status != service.PASSING_STATUS %}alerting with status: {{ service.overall_status }}{% else %}is back to normal{% endif %}.
 {% if service.overall_status != service.PASSING_STATUS %}
 CHECKS FAILING:{% for check in service.all_failing_checks %}
   FAILING - {{ check.name }} - Metric: {{ check.metric }} - Value:  {{ check.last_result.error|safe }} {% endfor %}
@@ -66,7 +66,7 @@ class EmailAlert(AlertPlugin):
         send_mail(
             subject=subject,
             message=t.render(c),
-            #from_email='Cabot <%s>' % env.get('CABOT_FROM_EMAIL'),
-            from_email='Cabot PATECO',
+            from_email='Cabot <%s>' % env.get('CABOT_FROM_EMAIL'),
+            # from_email='Cabot PATECO',
             recipient_list=emails,
         )
