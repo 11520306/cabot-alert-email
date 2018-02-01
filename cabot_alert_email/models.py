@@ -36,22 +36,22 @@ class EmailAlert(AlertPlugin):
             'host': settings.WWW_HTTP_HOST,
             'scheme': settings.WWW_SCHEME,
         })
-        # if service.overall_status != service.PASSING_STATUS:
-        #     # for check in service.all_failing_checks():
-        #         # alltype += str(check.name)
-        #         # alltype += " | "
-        #     if service.overall_status == service.CRITICAL_STATUS:
-        #         emails += [u.email for u in users if u.email]
-        #     # subject = '%s status for service: %s *** | %s ***' % (
-        #     subject = '[%s] Service [%s]' % (service.overall_status,
-        #                                     service.name)
-        # else:
-        #     # for check in service.all_passing_checks():
-        #     #     alltype += str(check.name)
-        #     #     alltype += " | "
-        #     subject = '[OK] Service [%s]' % (service.name)
-        subject = '[%s] Service [%s]' % (service.overall_status,
+        if service.overall_status != service.PASSING_STATUS:
+            # for check in service.all_failing_checks():
+                # alltype += str(check.name)
+                # alltype += " | "
+            # if service.overall_status == service.CRITICAL_STATUS:
+            #     emails += [u.email for u in users if u.email]
+            # subject = '%s status for service: %s *** | %s ***' % (
+            subject = '(%s) %s' % (service.overall_status,
                                             service.name)
+        else:
+            # for check in service.all_passing_checks():
+            #     alltype += str(check.name)
+            #     alltype += " | "
+            subject = '(OK) %s' % (service.name)
+        # subject = '[%s] Service [%s]' % (service.overall_status,
+        #                                     service.name)
         t = Template(email_template)
         
         send_mail(
