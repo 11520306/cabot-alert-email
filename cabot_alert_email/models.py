@@ -31,32 +31,28 @@ class EmailAlert(AlertPlugin):
         emails = [u.email for u in users if u.email]
         if not emails:
             return
-        resp = "Hello World NA"
         c = Context({
             'service': service,
             'host': settings.WWW_HTTP_HOST,
             'scheme': settings.WWW_SCHEME,
-            'resp': resp
         })
         if service.overall_status != service.PASSING_STATUS:
-            for check in service.all_failing_checks():
-                alltype += str(check.name)
-                alltype += " | "
+            # for check in service.all_failing_checks():
+                # alltype += str(check.name)
+                # alltype += " | "
             if service.overall_status == service.CRITICAL_STATUS:
                 emails += [u.email for u in users if u.email]
             # subject = '%s status for service: %s *** | %s ***' % (
-            subject = '[Uiza Alerts] Service [%s] %s *** | %s *** ' % (
-                service.name, service.overall_status, alltype)
+            subject = '[%s] Service [%s]' % (service.overall_status,
+                                            service.name)
         else:
-            for check in service.all_passing_checks():
-                alltype += str(check.name)
-                alltype += " | "
-            subject = '[Uiza Alerts] Service [%s] OK' % (service.name)
+            # for check in service.all_passing_checks():
+            #     alltype += str(check.name)
+            #     alltype += " | "
+            subject = '[OK] Service [%s]' % (service.name)
 
-        if service.name == "HAProxy":
-            t = Template(email_template_haproxy)
-        else:        
-            t = Template(email_template)
+        t = Template(email_template)
+        
         send_mail(
             subject=subject,
             message=t.render(c),
