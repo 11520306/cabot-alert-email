@@ -37,9 +37,9 @@ class EmailAlert(AlertPlugin):
             'scheme': settings.WWW_SCHEME,
         })
         if service.overall_status == service.PASSING_STATUS:
-            subject = '(OK) %s' % (service.name)
+            subject = '[OK] %s' % (service.name)
         else:
-            subject = '(%s) %s' % (service.overall_status, service.name)
+            subject = '[%s] %s' % (service.overall_status, service.name)
     
         t = Template(email_template)
         
